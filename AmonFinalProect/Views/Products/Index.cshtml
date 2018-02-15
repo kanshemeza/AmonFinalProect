@@ -1,0 +1,23 @@
+﻿@model AmonFinalProect.Models.ProductsViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+@foreach (var product in Model.Products)
+{
+<div class="row">
+    <div class="col-4">
+        <img src="@product.ImageUrl" alt="@product.Name" class="img-fluid" style="width: 100%; margin-bottom: 30px" />
+    </div>
+    <div class="col-8">
+        <dl>
+            <dt>Name</dt>
+            <dd>@product.Name</dd>
+            <dt>Price</dt>
+            <dd>@product.Price.ToString("c")</dd>
+            <dt>Description</dt>
+            <dd>@product.Description</dd>
+        </dl>
+    </div>
+</div>
+}
