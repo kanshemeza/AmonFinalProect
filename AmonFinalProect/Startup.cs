@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AmonFinalProect.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,10 +27,30 @@ namespace AmonFinalProect
         {
             services.AddMvc();
             services.AddAntiforgery();
+            services.AddSession();
+            services.Configure<Models.ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
+            services.AddOptions();
+
+
+            //services.AddDbContext<Models.AmonTestContext>(opt =>
+            //opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<Models.AmonTestContext>(
+                opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), 
+                sqlOptions => sqlOptions.MigrationsAssembly(this.GetType().Assembly.FullName))
+                );
+
+
+            //services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<Models.AmonTestContext>()
+                .AddDefaultTokenProviders();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, AmonTestContext context)
         {
             if (env.IsDevelopment())
             {
@@ -39,6 +63,7 @@ namespace AmonFinalProect
             }
 
             app.UseStaticFiles();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
@@ -46,6 +71,9 @@ namespace AmonFinalProect
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            DbInitializer.Initialize(context);
+
         }
     }
 }

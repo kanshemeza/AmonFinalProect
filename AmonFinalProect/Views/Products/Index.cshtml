@@ -1,11 +1,12 @@
-﻿@model AmonFinalProect.Models.ProductsViewModel
+﻿@model IEnumerable<AmonFinalProect.Models.Products>
 
 @{
     ViewData["Title"] = "Index";
 }
-@foreach (var product in Model.Products)
+@foreach (var product in Model)
 {
 <div class="row">
+    <button></button>
     <div class="col-4">
         <img src="@product.ImageUrl" alt="@product.Name" class="img-fluid" style="width: 100%; margin-bottom: 30px" />
     </div>
@@ -14,10 +15,26 @@
             <dt>Name</dt>
             <dd>@product.Name</dd>
             <dt>Price</dt>
-            <dd>@product.Price.ToString("c")</dd>
+            <dd>@(product.Price.HasValue ? product.Price.Value.ToString("c") : "No Price")</dd>
             <dt>Description</dt>
             <dd>@product.Description</dd>
+            <dt>Reviews</dt>
+            <dd>
+                @if (product.Reviews != null && product.Reviews.Any())
+    {
+            @foreach (var review in product.Reviews)
+{
+            <blockquote>
+                @review.Body - @review.Rating
+            </blockquote>
+
+}
+
+}
+            </dd>
         </dl>
+
+     
     </div>
 </div>
 }

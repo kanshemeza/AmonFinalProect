@@ -7,19 +7,23 @@ namespace AmonFinalProect.Models
 {
     public class ProfileModel
     {
-        [System.ComponentModel.DataAnnotations.RequiredAttribute]
-        public string fname { get; set; }
-        [System.ComponentModel.DataAnnotations.RequiredAttribute]
-        public string lname { get; set; }
-        [System.ComponentModel.DataAnnotations.RequiredAttribute]
-        public string address { get; set; }
-        [System.ComponentModel.DataAnnotations.RequiredAttribute]
-        public string city { get; set; }
-        [System.ComponentModel.DataAnnotations.RequiredAttribute]
-        public string state { get; set; }
-        [System.ComponentModel.DataAnnotations.RequiredAttribute]
-        public int? zip { get; set; }
-        [System.ComponentModel.DataAnnotations.RequiredAttribute]
-        public string email { get; set; }
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Fname { get; set; }
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Lname { get; set; }
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Address { get; set; }
+        [System.ComponentModel.DataAnnotations.Required]
+        public string City { get; set; }
+        [System.ComponentModel.DataAnnotations.Required]
+        public string State { get; set; }
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^\d{5}(?:[-\s]\d{4})?$", ErrorMessage = "Use a 5 or 9 digit zip-code")]
+        public int? Zip { get; set; }
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$", ErrorMessage = "Invalid email address")]
+        public string Email { get; set; }
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Password { get; set; }
     }
 }
