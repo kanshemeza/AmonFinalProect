@@ -30,6 +30,20 @@ namespace AmonFinalProect
             services.AddSession();
             services.Configure<Models.ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             services.AddOptions();
+            services.AddTransient<SendGrid.SendGridClient>((x) =>
+            {
+                return new SendGrid.SendGridClient(Configuration["sendgrid"]);
+            });
+
+            services.AddTransient<Braintree.BraintreeGateway>((x) =>
+            {
+                return new Braintree.BraintreeGateway(
+                    Configuration["braintree.environment"],
+                    Configuration["braintree.merchantid"],
+                    Configuration["braintree.publickey"],
+                    Configuration["braintree.privatekey"]
+                );
+            });
 
 
             //services.AddDbContext<Models.AmonTestContext>(opt =>
@@ -40,6 +54,15 @@ namespace AmonFinalProect
                 sqlOptions => sqlOptions.MigrationsAssembly(this.GetType().Assembly.FullName))
                 );
 
+            services.AddTransient<SmartyStreets.USStreetApi.Client>((x) =>
+            {
+                var client = new SmartyStreets.ClientBuilder(
+                    Configuration["smartystreets.authtoken"],
+                    Configuration["smartystreets.authid"])
+                        .BuildUsStreetApiClient();
+
+                return client;
+            });
 
             //services.AddIdentity<IdentityUser, IdentityRole>()
             services.AddIdentity<ApplicationUser, IdentityRole>()

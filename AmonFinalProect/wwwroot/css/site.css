@@ -29,3 +29,48 @@
         display: none;
     }
 }
+.card-border{
+    border:none;
+}
+.cHeader{
+    background-color: transparent;
+    border: none;
+}
+
+.cFooter{
+    background-color:transparent;
+    border-top: none;
+    margin-top:-60px;
+}
+
+img{
+    margin-bottom:40px;
+}
+
+p.p-align{
+    margin-top: -3px;
+    margin-bottom: 0px;
+    text-align:center;
+}
+
+.item-cursor{
+    cursor:pointer;
+}
+
+.cart-button {
+    background-color: #FF3008;
+   
+}
+
+.unpoint{
+    cursor: default;
+}
+.product-border{
+    border-top: 1px solid red;
+    border-bottom: 1px solid red;
+}
+.qp {
+    text-align: center;
+}
+
+

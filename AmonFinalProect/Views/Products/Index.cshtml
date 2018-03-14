@@ -3,38 +3,84 @@
 @{
     ViewData["Title"] = "Index";
 }
-@foreach (var product in Model)
-{
+
 <div class="row">
-    <button></button>
-    <div class="col-4">
-        <img src="@product.ImageUrl" alt="@product.Name" class="img-fluid" style="width: 100%; margin-bottom: 30px" />
-    </div>
-    <div class="col-8">
-        <dl>
-            <dt>Name</dt>
-            <dd>@product.Name</dd>
-            <dt>Price</dt>
-            <dd>@(product.Price.HasValue ? product.Price.Value.ToString("c") : "No Price")</dd>
-            <dt>Description</dt>
-            <dd>@product.Description</dd>
-            <dt>Reviews</dt>
-            <dd>
-                @if (product.Reviews != null && product.Reviews.Any())
+    @foreach (var product in Model)
     {
-            @foreach (var review in product.Reviews)
-{
-            <blockquote>
-                @review.Body - @review.Rating
-            </blockquote>
 
-}
+    <div class="col-3">
+        <div class="item-cursor" data-toggle="modal" data-target="#@product.Id">
+            <!--<a href="@product.ImageUrl" data-toggle="modal" data-target="#myModal"> -->
+            <div class="card card-border">
+                <div class="card-header cHeader"></div>
+                <div class="card-body">
 
-}
-            </dd>
-        </dl>
+                    <img src="@product.ImageUrl" alt="@product.Name" class="img-fluid " style="max-width: 100%; height:auto; margin-bottom: 30px" />
 
-     
+                </div>
+                <div class="card-footer cFooter">
+                    <p class="card-text p-align">@(product.Price.HasValue ? product.Price.Value.ToString("c") : "No Price")</p>
+                    <p class="card-text p-align">@product.Name</p>
+                </div>
+
+            </div>
+            <!--</a>-->
+            <!-- The Modal -->
+
+
+        </div>
+        <div class="modal fade unpoint" id="@product.Id">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">@product.Name</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col">
+                                <img src="@product.ImageUrl" class="img-fluid" />
+                            </div>
+                            <div class="col">
+                                <p>@product.Description</p>
+                                <input type="hidden" class="product" name="product" value="@product.Id" />
+                                <input type="number" class="form-control-range quantity" name="quantity" />
+                                <textarea name="instructions" class="instructions"></textarea>
+                                <button type="button" class="btn btn-light cart-button">Add to Cart</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
     </div>
+    }
+
 </div>
+
+@section  scripts{ 
+    <script type="text/javascript">
+        $(".cart-button").click(e => {
+            var id = $(e.target).siblings('.product').val();
+            var quantity = $(e.target).siblings('.quantity').val();
+            var instructions = $(e.target).siblings('.instructions').val();
+            $.post("/products", { id: id, quantity: quantity, instructions: instructions }, (d) => {
+                window.location.href = "/Cart"
+            });
+            
+
+        })
+    </script>
 }

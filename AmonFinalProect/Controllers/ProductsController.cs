@@ -42,36 +42,55 @@ namespace AmonFinalProect.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(int id, bool extraParam = true)
+        public IActionResult Index(int id, int quantity, string instructions)
         {
             //Rather than saving data in plain-text on the cookie, I'll use GUIDs to save data
             //that isn't easy for your end-user to edit.  In this case, Globally Unique IDs
             //are helpful for tracking "carts" across user sessions.
             string cartId;
-            var product = _context.Products.Find(id);
-            Carts cart = new Carts();
-            CartsProducts item = new CartsProducts();
-            item.Quantity = 1;
-            item.Product = product;
-            cart.CartsProducts.Add(item);
-            cart.DateCreated = DateTime.UtcNow;
-            cart.DateLastModified = DateTime.UtcNow;
-            
-            cart.CartCode = Guid.NewGuid();
+            Guid cartCode;
+            Carts cart;
+            if (Request.Cookies.TryGetValue("cartId", out cartId) && Guid.TryParse(cartId, out cartCode) && _context.Carts.Any(x => x.CartCode == cartCode))
+            {
 
-            _context.Carts.Add(cart);
+                cart = _context.Carts.Include(x => x.CartsProducts).ThenInclude(y => y.Product).Single(x => x.CartCode == cartCode);
+                cart.DateLastModified = DateTime.UtcNow;
+            }
+            else
+            {
+                cart = new Carts();
+                cart.DateCreated = DateTime.UtcNow;
+                cart.DateLastModified = DateTime.UtcNow;
+                cartCode = Guid.NewGuid();
+                cart.CartCode = cartCode;
+                cartId = cart.CartCode.ToString();
+                Response.Cookies.Append("cartId", cartId,
+                    new Microsoft.AspNetCore.Http.CookieOptions
+                    {
+                        Expires = DateTime.Now.AddYears(1)
+                    });
+
+                _context.Carts.Add(cart);
+
+            }
+            CartsProducts item = cart.CartsProducts.FirstOrDefault(x => x.ProductId == id);
+            if(item == null)
+            {
+                item = new CartsProducts();
+                item.ProductId = id;
+                item.Quantity = 0;
+                item.SpecialInstructions = instructions;
+                cart.CartsProducts.Add(item);
+            }
+            item.Quantity += quantity;
             _context.SaveChanges();
-            cartId = cart.CartCode.ToString();
-            Response.Cookies.Append("cartId", cartId,
-                new Microsoft.AspNetCore.Http.CookieOptions
-                {
-                    Expires = DateTime.Now.AddYears(1)
-                });
-
+            
             Console.WriteLine("Added {0} to cart {1}", id, cartId);
 
 
-            return RedirectToAction("Index", "Delivery");
+            return Ok("Added to cart");
         }
+
+       
     }
 }
