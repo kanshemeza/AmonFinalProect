@@ -28,10 +28,10 @@
             <img src="@item.Product.ImageUrl" alt="@item.Product.Name" class="img-fluid" style="max-width: 100%; height:auto; margin-bottom: 30px" />
         </div>
         <div class="col-md-3 rm">
-            <form method="post" asp-action="Remove" asp-controller="Cart" class="form-inline">
-                <input type="hidden" class="product" name="product" value="@item.Product.Id" />
+            @*<form method="post" asp-action="Remove" asp-controller="Cart" class="form-inline">
+                <input type="hidden" name="remove" value="@item.Product.Id" />
                 <input type="submit" value="Remove item" class="btn btn-sm" />
-            </form>
+            </form>*@
         </div>
         <div class="col-md-3 rm">
             <input type="hidden" class="product" name="product" value="@item.Product.Id" />
@@ -57,9 +57,8 @@
 </div>
 
 <div class="row">
-    <div class="col-md-9"></div>
-    <div class="col-md-3">
-        <button class="btn btn-light checkout-button">Checkout</button>
+    <div class="col-md-4 offset-md-4">
+        <button class="btn btn-info checkout-button">Checkout</button>
     </div>
     
 </div>
@@ -69,7 +68,7 @@
 @section scripts{
     <script type="text/javascript">
         $(".checkout-button").click(e => {
-            window.location.href = "/Profile"
+            window.location.href = "/Shipping"
         });
 
         $(".qty").change(e => {

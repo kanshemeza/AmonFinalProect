@@ -45,12 +45,12 @@ namespace AmonFinalProect.Controllers
             {
 
                 var cart = _context.Carts.Include(x => x.CartsProducts).ThenInclude(y => y.Product).Single(x => x.CartCode == cartCode);
-                var cartItem = cart.CartsProducts.Single(x => x.Product.Id == id);
-                cartItem.Quantity = quantity;
+                var cartRemove = cart.CartsProducts.Single(x => x.Product.Id == id);
+                cartRemove.Quantity = quantity;
 
-                if (cartItem.Quantity == 0)
+                if (cartRemove.Quantity == 0)
                 {
-                    _context.CartsProducts.Remove(cartItem);
+                    _context.CartsProducts.Remove(cartRemove);
                 }
                 _context.SaveChanges();
             }
@@ -58,7 +58,7 @@ namespace AmonFinalProect.Controllers
         }
 
         [HttpPost]
-        public IActionResult Remove(int id, int quantity)
+        public IActionResult Remove(int id)
         {
             string cartId;
             Guid cartCode;
@@ -66,14 +66,8 @@ namespace AmonFinalProect.Controllers
             {
 
                 var cart = _context.Carts.Include(x => x.CartsProducts).ThenInclude(y => y.Product).Single(x => x.CartCode == cartCode);
-                var cartItem = cart.CartsProducts.Single(x => x.Product.Id == id);
-                cartItem.Quantity = quantity;
-
-                if (cartItem.Quantity != 0)
-                {
-                    _context.CartsProducts.Remove(cartItem);
-                }
-              
+                var cartItem = cart.CartsProducts.Single(x => x.Product.Id == id);                 
+                _context.CartsProducts.Remove(cartItem);
                 _context.SaveChanges();
             }
             return Ok();

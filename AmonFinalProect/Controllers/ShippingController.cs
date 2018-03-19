@@ -99,7 +99,7 @@ namespace AmonFinalProect.Controllers
                 if (result.IsSuccess())
                 {
                     //If model state is valid, proceed to the next step.
-                    return this.RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home");
                 }
                 foreach (var error in result.Errors.All())
                 {

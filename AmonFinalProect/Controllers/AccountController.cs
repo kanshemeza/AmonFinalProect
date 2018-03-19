@@ -35,7 +35,7 @@ namespace AmonFinalProect.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(string username, string password)
+        public async Task<IActionResult> Register(string username, string password, string email)
         {
             if (ModelState.IsValid)
             {
@@ -54,7 +54,7 @@ namespace AmonFinalProect.Controllers
                         await _sendGridClient.SendEmailAsync(message);
 
                         _signInManager.SignInAsync(newUser, false).Wait();
-                        return this.RedirectToAction("Index", "Login");
+                        return RedirectToAction("Index", "Account");
 
                     }
                     else
@@ -97,7 +97,7 @@ namespace AmonFinalProect.Controllers
                     {
                         //I got the right password for the user - log them in!
                         _signInManager.SignInAsync(existingUser, false).Wait();
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Products");
                     }
                     else
                     {
