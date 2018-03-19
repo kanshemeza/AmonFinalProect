@@ -5,15 +5,16 @@
 
 <h2>Cart</h2>
 <div class="row">
-    <div class="col-8">
-        <h5>Shopping Cart</h5>
+    <div class="col-md-3">
+        <h5 class="qp">Item</h5>
     </div>
+    <div class="col-md-3"></div>
 
-    <div class="col-2">
+    <div class="col-md-3">
         <h5 class="qp">Quantity</h5>
     </div>
 
-    <div class="col-2">
+    <div class="col-md-3">
         <h5 class="qp">Price</h5>
     </div>
 </div>
@@ -23,15 +24,22 @@
     @foreach (var item in Model.CartsProducts)
     {
 
-        <div class="col-2">
+        <div class="col-md-3  rm">
             <img src="@item.Product.ImageUrl" alt="@item.Product.Name" class="img-fluid" style="max-width: 100%; height:auto; margin-bottom: 30px" />
         </div>
-        <div class="col-6"></div>
-        <div class="col-2">
-            <p class="qp"> @item.Quantity</p>
-
+        <div class="col-md-3 rm">
+            <form method="post" asp-action="Remove" asp-controller="Cart" class="form-inline">
+                <input type="hidden" class="product" name="product" value="@item.Product.Id" />
+                <input type="submit" value="Remove item" class="btn btn-sm" />
+            </form>
         </div>
-        <div class="col-2">
+        <div class="col-md-3 rm">
+            <input type="hidden" class="product" name="product" value="@item.Product.Id" />
+            <div class="qp">
+                <input type="number" min="0" max="99" value="@item.Quantity" class="qp qty" />
+            </div>
+        </div>
+        <div class="col-md-3 rm">
             <p class="qp">@(item.Product.Price.HasValue ? item.Product.Price.Value.ToString("c") : "No Price")</p>
         </div>
 
@@ -39,62 +47,38 @@
 </div>
 
 <div class="row">
-    <div class="col-8"></div>
-    <div class="col-2">
+    <div class="col-md-6"></div>
+    <div class="col-md-3">
         <h5 class="qp">Subtotal</h5>
     </div>
-    <div class="col-2">
+    <div class="col-md-3">
         <h5 class="qp">@Model.CartsProducts.Sum(x => (x.Product.Price ?? 0m) * x.Quantity).ToString("c")</h5>
     </div>
 </div>
 
-<button class="btn btn-primary checkout-button">Checkout</button>
+<div class="row">
+    <div class="col-md-9"></div>
+    <div class="col-md-3">
+        <button class="btn btn-light checkout-button">Checkout</button>
+    </div>
+    
+</div>
+
 
 
 @section scripts{
     <script type="text/javascript">
         $(".checkout-button").click(e => {
-            //var id = $(e.target).siblings('.product').val();
-            //var quantity = $(e.target).siblings('.quantity').val();
-            //var instructions = $(e.target).siblings('.instructions').val();
-            //$.post("/products", { id: id, quantity: quantity, instructions: instructions }, (d) => {
-            //    window.location.href = "/Cart"
-            //});
             window.location.href = "/Profile"
+        });
 
-
+        $(".qty").change(e => {
+            var id = $(e.target).parent().siblings('.product').val();
+            var quantity = $(e.target).val();
+            $.post("/cart/Update", { id: id, quantity: quantity },
+                (d) => { window.location.href = "/Cart"; }
+            );
         })
+
     </script>
 }
-
-@*<div class="row">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                </tr>
-            </thead>
-            @foreach (var item in Model.CartsProducts)
-            {
-                <tr>
-                    <td>@item.Product.Name</td>
-                    <td>
-                        <form asp-action="update" asp-controller="cart" method="post" class="form-inline">
-                            <input name="productId" value="@item.Product.Id" type="hidden" />
-                            <input name="quantity" value="@item.Quantity" type="number" class="form-control-sm" /><input type="submit" value="Update Quantity" class="btn btn-primary" />
-                        </form>
-                    </td>
-                    <td>@((item.Product.Price ?? 0m).ToString("c"))</td>
-                </tr>
-            }
-            <tfoot>
-                <tr>
-                    <th colspan="2">Subtotal</th>
-                    <th>@Model.CartsProducts.Sum(x => (x.Product.Price ?? 0m) * x.Quantity).ToString("c")</th>
-                </tr>
-            </tfoot>
-        </table>
-    </div>*@
-

@@ -12,6 +12,7 @@ namespace AmonFinalProect.Models
     public class ProductsViewModel
     {
         public Products[] Products { get; set; }
+        
     }
 
 }

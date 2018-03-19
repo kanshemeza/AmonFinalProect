@@ -30,31 +30,53 @@ namespace AmonFinalProect.Controllers
             }
             return RedirectToAction("Index", "Products");
         }
+        //[HttpPost]
+        //public IActionResult Checkout()
+        //{
+        //    return RedirectToAction("Index", "Profile");
+        //}
+
         [HttpPost]
-        public IActionResult Checkout()
+        public IActionResult Update(int quantity, int id)
         {
-            return RedirectToAction("Index", "Profile");
+            string cartId;
+            Guid cartCode;
+            if (Request.Cookies.TryGetValue("cartId", out cartId) && Guid.TryParse(cartId, out cartCode) && _context.Carts.Any(x => x.CartCode == cartCode))
+            {
+
+                var cart = _context.Carts.Include(x => x.CartsProducts).ThenInclude(y => y.Product).Single(x => x.CartCode == cartCode);
+                var cartItem = cart.CartsProducts.Single(x => x.Product.Id == id);
+                cartItem.Quantity = quantity;
+
+                if (cartItem.Quantity == 0)
+                {
+                    _context.CartsProducts.Remove(cartItem);
+                }
+                _context.SaveChanges();
+            }
+            return Ok();
         }
 
-        //[HttpPost]
-        //public IActionResult Update(int quantity, int productId)
-        //{
-        //    string cartId;
-        //    Guid cartCode;
-        //    if (Request.Cookies.TryGetValue("cartId", out cartId) && Guid.TryParse(cartId, out cartCode) && _context.Carts.Any(x => x.CartCode == cartCode))
-        //    {
+        [HttpPost]
+        public IActionResult Remove(int id, int quantity)
+        {
+            string cartId;
+            Guid cartCode;
+            if (Request.Cookies.TryGetValue("cartId", out cartId) && Guid.TryParse(cartId, out cartCode) && _context.Carts.Any(x => x.CartCode == cartCode))
+            {
 
-        //        var cart = _context.Carts.Include(x => x.CartsProducts).ThenInclude(y => y.Product).Single(x => x.CartCode == cartCode);
-        //        var cartItem = cart.CartsProducts.Single(x => x.Product.Id == productId);
-        //        cartItem.Quantity = quantity;
+                var cart = _context.Carts.Include(x => x.CartsProducts).ThenInclude(y => y.Product).Single(x => x.CartCode == cartCode);
+                var cartItem = cart.CartsProducts.Single(x => x.Product.Id == id);
+                cartItem.Quantity = quantity;
 
-        //        if (cartItem.Quantity == 0)
-        //        {
-        //            _context.CartsProducts.Remove(cartItem);
-        //        }
-        //        _context.SaveChanges();
-        //    }
-        //    return RedirectToAction("Index");
-        //}
+                if (cartItem.Quantity != 0)
+                {
+                    _context.CartsProducts.Remove(cartItem);
+                }
+              
+                _context.SaveChanges();
+            }
+            return Ok();
+        }
     }
 }

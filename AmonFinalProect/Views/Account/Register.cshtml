@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="centered-form">
+    <h2>Sign up</h2>
+</div>
+<div class="form-div">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 offset-md-4">
+                <div asp-validation-summary="All"></div>
+            </div>
+        </div>
+    </div>
+    
+    <form asp-action="index" asp-controller="account" method="post">
+        <div class="form-row">
+            <div class="form-group col-md-4 offset-md-4">
+                <label>Email address</label>
+                <input type="text" placeholder="Enter email" class="form-control" name="username" required />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4 offset-md-4 offset-md-4">
+                <label>Password</label>
+                <input type="password" placeholder="Enter password" class="form-control" name="password" required />
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group col-md-4 offset-md-4">
+                <input type="submit" class="form-control btn btn-info" value="Sign up" />
+            </div>
+        </div>
+    </form>
+
+    <div class="col-md-4 offset-md-4">
+        <span>Already have an account?</span>
+        <a asp-action="Index">Sign in</a>
+    </div>
+
+</div>
+
