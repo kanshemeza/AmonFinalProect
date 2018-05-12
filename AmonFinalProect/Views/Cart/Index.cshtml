@@ -28,10 +28,10 @@
             <img src="@item.Product.ImageUrl" alt="@item.Product.Name" class="img-fluid" style="max-width: 100%; height:auto; margin-bottom: 30px" />
         </div>
         <div class="col-md-3 rm">
-            @*<form method="post" asp-action="Remove" asp-controller="Cart" class="form-inline">
-                <input type="hidden" name="remove" value="@item.Product.Id" />
+           <form method="post" asp-action="Remove" asp-controller="Cart" class="form-inline">
+                <input type="hidden" name="id" value="@item.Product.Id" />
                 <input type="submit" value="Remove item" class="btn btn-sm" />
-            </form>*@
+            </form>
         </div>
         <div class="col-md-3 rm">
             <input type="hidden" class="product" name="product" value="@item.Product.Id" />

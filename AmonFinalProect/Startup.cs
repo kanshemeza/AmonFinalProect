@@ -49,7 +49,7 @@ namespace AmonFinalProect
             //services.AddDbContext<Models.AmonTestContext>(opt =>
             //opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDbContext<Models.AmonTestContext>(
+            services.AddDbContext<AmonTestContext>(
                 opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), 
                 sqlOptions => sqlOptions.MigrationsAssembly(this.GetType().Assembly.FullName))
                 );
